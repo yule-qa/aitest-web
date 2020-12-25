@@ -44,6 +44,9 @@
             <div v-if="item.defaultJenkinsFlag==0">否</div>
         </template>
         </v-data-table>  
+        <!--分页 -->
+        <v-pagination v-if="pageLength>0" v-model="currentPage" :length="pageLength" @input="getJenkinsList()" total-visible="7"></v-pagination>
+
     </div>
 </template>
 <script>
@@ -54,6 +57,9 @@ export default {
             dialogTitle:'添加Jenkins',
             addDialog:false,
             jenkinsName:'',
+            currentPage:1,
+            pageLength:0,
+            rows:'',
             headers:[                     // text 是前端展示的名字，value 后面的内容要和后端接口返回的字段一致
                 {text:'ID',value:'id'},
                 {text:'名称',value:'name'},
@@ -115,9 +121,15 @@ export default {
             })
         },
         getJenkinsList(){
-            this.$api.jenkins.getJenkinsList().then(res=>{
+            let params={
+                    pageNum:this.currentPage,
+                    pageSize:5
+                }
+            this.$api.jenkins.getJenkinsList(params).then(res=>{
                 console.log(res)
                 this.tableData=res.data.data.data
+                this.rows=res.data.data.recordsTotal
+                this.pageLength=Math.ceil(this.rows/5)
             })
         },
         openDiolog(){

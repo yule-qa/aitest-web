@@ -5,7 +5,7 @@ import axios from './http'
             return axios.post( '/jenkins' ,params)
         },
         getJenkinsList(params){
-            return axios.get('/jenkins/list',params)
+            return axios.get('/jenkins/list',{params})
         },
         deleteJenkins(params){
             return axios.delete('/jenkins/'+params.id)
