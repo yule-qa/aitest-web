@@ -41,11 +41,11 @@
         hide-default-footer
         show-select
         >
-        
             <template v-slot:[`item.action`]='{item}'>
                 <v-btn color="error" small @click="deleteCase(item)">删除</v-btn>
             </template>
         </v-data-table>
+        <v-pagination v-if="pageLength>0" v-model="currentPage" :length="pageLength" @input="getCasesList()" total-visible="7"></v-pagination>
     </div>
 </template>
 
@@ -62,6 +62,8 @@ export default {
             caseData:'',
             caseName:'',
             tableData:[],
+            currentPage:1,
+            pageLength:0,
             headers:[
                 {text:'名称',value:'caseName'},
                 {text:'数据',value:'caseData'},
@@ -118,9 +120,15 @@ export default {
             })
         },
         getCasesList(){
-            this.$api.cases.getCasesList().then(res=>{
+            let params={
+                    pageNum:this.currentPage,
+                    pageSize:5
+                }
+            this.$api.cases.getCasesList(params).then(res=>{
                 console.log(res)
                 this.tableData = res.data.data.data
+                this.rows=res.data.data.recordsTotal
+                this.pageLength=Math.ceil(this.rows/5)
             })
         },
         saveCase(){

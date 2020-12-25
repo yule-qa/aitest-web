@@ -16,7 +16,7 @@ import axios from './http'
             return axios.delete('/testCase/'+params.id)
         },
         getCasesList(params){
-            return axios.get('/testCase/list',params)
+            return axios.get('/testCase/list',{params})
         }
 }
 
