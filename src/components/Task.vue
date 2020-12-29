@@ -34,6 +34,7 @@ export default {
                 {text:'操作',value:'action'}
             ],
             tableData:[],
+            alltableData:[],
             currentPage:1,
             pageLength:0,
             rows:'',
@@ -49,7 +50,12 @@ export default {
                 pageSize:5
             }
             this.$api.task.getTaskList(params).then(res=>{
-                this.tableData=res.data.data.data
+                this.alltableData=res.data.data.data
+                this.rows=res.data.data.recordsTotal
+                this.pageLength=Math.ceil(this.rows/5)
+                //task前端做的分页，jenkins和case 都是后端做的分页
+                this.tableData=this.alltableData.slice((this.currentPage-1)*5,(this.currentPage-1)*5+5)
+            
                 for(let i=0;i<this.tableData.length;i++){
                     if(this.tableData[i].testCommand==undefined){
                         continue;
@@ -58,8 +64,7 @@ export default {
                        this.tableData[i].shortTestCommand = this.tableData[i].testCommand.substring(0,20)+'...'; 
                     }
                 }
-                this.rows=res.data.data.recordsTotal
-                this.pageLength=Math.ceil(this.rows/5)
+                
             })
         },
         doTask(item){
