@@ -42,7 +42,6 @@ export default {
     },
     created(){
         this.getTaskList() 
-        this.getUpdateTaskStatus()
     },
     methods:{
         getTaskList(){
@@ -68,9 +67,7 @@ export default {
                 
             })
         },
-        getUpdateTaskStatus(){
-
-        },
+        
         doTask(item){
             let params={ //key必须和接口文档一致，否则后端接收不到
                 taskId:item.id,
