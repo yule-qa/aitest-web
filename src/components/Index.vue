@@ -34,6 +34,7 @@ export default {
             } 
             this.$api.user.logout(params).then(
                 res =>{
+                    localStorage.removeItem('active',active)
                     this.$router.push('/')
                 }
             )

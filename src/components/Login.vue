@@ -24,6 +24,7 @@
                 }
                 this.$api.user.signIn(params).then(res=>{
                     console.log(res)
+                    localStorage.setItem("active",0)
                     localStorage.setItem("token",res.data.data.token)  //前端保存token，用于以后的接口操作
                     this.$notify({
                         title: '成功',

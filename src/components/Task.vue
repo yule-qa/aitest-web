@@ -22,6 +22,7 @@
 </template>
 <script>
 export default {
+    inject:["reload"],
     data(){
         return {
             headers:[
@@ -38,6 +39,8 @@ export default {
             currentPage:1,
             pageLength:0,
             rows:'',
+            timer: '',
+            value: 0,
         }
     },
     created(){
@@ -47,9 +50,12 @@ export default {
         getTaskList(){
             let params={
                 pageNum:this.currentPage,
-                pageSize:5
+                pageSize:5,
+                
             }
             this.$api.task.getTaskList(params).then(res=>{
+                this.value ++;
+                console.log("执行第"+this.value+"次")
                 this.alltableData=res.data.data.data
                 this.rows=res.data.data.recordsTotal
                 this.pageLength=Math.ceil(this.rows/5)
@@ -66,6 +72,7 @@ export default {
                 }
                 
             })
+            
         },
         
         doTask(item){
@@ -81,6 +88,8 @@ export default {
                         type:'success'
                     })
                     this.getTaskList() 
+                    this.getTimeOut()
+                
                 }
             })
         },
@@ -91,8 +100,18 @@ export default {
             this.$api.report.getAllure(params).then(res=>{
                 window.open(res.data.data.allureReportUrl,"_blank")  // _blank 默认打开一个新窗口 
             })
+        },
+        //实现隔15s后，任务列表再次刷新，实现了，任务状态的回写
+        getTimeOut(){
+            this.timer=setTimeout(this.getTaskList,15000);
         }
-    }
+    },
+
+            
+    beforeDestroy() {
+        clearTimeout(this.timer);
+    }   
+    
 }
 </script>
 <style scoped>
